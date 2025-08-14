@@ -16,6 +16,8 @@ export default function Taskbar({
     closeWindow,
     locale = "en-US",
 }: TaskbarProps): React.JSX.Element {
+    const folderIcon: string = "/icons/folder.png";
+
     return (
         <div className="fixed inset-x-0 bottom-0 h-14 z-[1000] border-t border-white/10 bg-zinc-900/70 backdrop-blur-md shadow-[0_-6px_18px_rgba(0,0,0,0.35)]">
             <div className="mx-auto h-full px-3">
@@ -26,7 +28,7 @@ export default function Taskbar({
                     {/* centered icons */}
                     <div className="flex items-center gap-2">
                         {windows.map((win) => {
-                            const iconSrc = win.node.appdata?.icon;
+                            const iconSrc = win.node.appdata ? win.node.appdata.icon : folderIcon;
                             const isMin = !!win.minimized;
                             const isActive = !win.minimized && win.maximized;
 
