@@ -5,7 +5,7 @@ import type { AppWindowProps } from "./appProps";
 
 type Line = { text: string };
 
-export default function TerminalApp({ openApp, root , addFolder, addFile}: AppWindowProps) {
+export default function TerminalApp({ openApp, root, addFolder, addFile }: AppWindowProps) {
 
   const [openNode, setOpenNode] = useState<Node | null>(null);
   const current = openNode ?? root;
@@ -43,7 +43,7 @@ export default function TerminalApp({ openApp, root , addFolder, addFile}: AppWi
 
     switch (cmd) {
       case "help":
-        print("Available commands: help, ls, cd, clear, mkdir");
+        print("Available commands: help, ls, cd, clear, mkdir, exec");
         break;
 
       case "ls":
@@ -80,11 +80,28 @@ export default function TerminalApp({ openApp, root , addFolder, addFile}: AppWi
         if (args.length === 0) {
           print("Usage: mkdir <folder>");
           break;
-        }  else {
+        } else {
           addFolder(currentNode, args[0])
         }
         break;
+      }
 
+      case "exec": {
+        if (args.length === 0) {
+          print("Usage: exec <application>");
+          break;
+        } else {
+          print(currentNode.label);
+
+          const target = currentNode.children?.find(c => c.label === args[0]);
+
+          if (target) {
+            openApp(target, target.label);
+          } else {
+            print(`Application "${args[0]}" not found.`);
+          }
+        }
+        break;
       }
 
       case "clear":

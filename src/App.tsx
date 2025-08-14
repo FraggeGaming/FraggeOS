@@ -2,15 +2,13 @@ import { useState } from 'react'
 
 import "./index.css";
 
-import Window from "./components/Window";
-import Explorer from './components/apps/Explorer';
-import TerminalApp from './components/apps/TerminalApp';
+import WindowManager from './components/WindowManager';
 import { ClickableIcon } from './components/DesktopIcon';
 
 import { Node, useFilesystem } from "./components/FileManager"
 
 
-type WindowEntry = {
+export type WindowEntry = {
   id: string;
   node: Node;
   title: string;
@@ -82,6 +80,9 @@ export default function App(): React.JSX.Element {
     setWindows((prev) => prev.filter((win) => win.id !== id));
   };
 
+  const appProps = { openApp, root, addFolder, addFile };
+
+
   return (
     <div className="App">
       <header className="App-header">
@@ -104,38 +105,14 @@ export default function App(): React.JSX.Element {
           );
         })}
 
-
-        {/* Windows */}
-        {windows.map((win) => {
-          const AppComponent = win.node.appdata ? win.node.appdata.Component : Explorer;
-          const extraProps = { openApp, root , addFolder, addFile};
-
-          return (
-            <Window
-              key={win.id}
-              id={win.id}
-              title={win.title}
-              minimized={win.minimized}
-              maximized={win.maximized}
-              x={win.x}
-              y={win.y}
-              width={win.width}
-              height={win.height}
-              onMinimize={() => minimizeWindow(win.id)}
-              onMaximize={() => maximizeWindow(win.id)}
-              onClose={() => closeWindow(win.id)}
-              onMoveResize={(x: number, y: number, width: number, height: number) => {
-                setWindows((prev) =>
-                  prev.map((w) =>
-                    w.id === win.id ? { ...w, x, y, width, height } : w
-                  )
-                );
-              }}
-            >
-              <AppComponent {...extraProps} />
-            </Window>
-          );
-        })}
+        <WindowManager
+          windows={windows}
+          setWindows={setWindows}
+          minimizeWindow={minimizeWindow}
+          maximizeWindow={maximizeWindow}
+          closeWindow={closeWindow}
+          appProps={appProps}
+        />
       </div>
 
       {/* Taskbar */}
