@@ -54,7 +54,7 @@ function buildFilesystem(): Node {
 
     new Node(desktop, "Terminal", {
         title: "Terminal",
-        icon: "/icons/computer.png",
+        icon: "/icons/terminal.png",
         Component: TerminalApp,
     });
 
@@ -64,20 +64,16 @@ function buildFilesystem(): Node {
         Component: Explorer,
     });
 
+    new Node(desktop, "RandomStuff");
+
     const projects = new Node(r, "Projects");
     new Node(projects, "Antzation", {
-        title: "Projects",
-        icon: "/icons/folder.png",
+        title: "Antzation",
+        icon: "/icons/document.png",
         Component: ProjectsApp,
     });
 
     const appData = new Node(r, "AppData");
-    new Node(appData, "Terminal", {
-        title: "Terminal",
-        icon: "/icons/computer.png",
-        Component: TerminalApp,
-    });
-
     return r;
 }
 

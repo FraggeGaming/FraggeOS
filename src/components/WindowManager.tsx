@@ -11,7 +11,7 @@ type WindowManagerProps = {
     minimizeWindow: (id: string) => void;
     maximizeWindow: (id: string) => void;
     closeWindow: (id: string) => void;
-    appProps: AppWindowProps; // shape of props passed to each app (e.g. { openApp, root, addFolder, addFile })
+    appProps: AppWindowProps;
 };
 
 export default function WindowManager({
@@ -26,6 +26,13 @@ export default function WindowManager({
         <>
             {windows.map((win) => {
                 const AppComponent = win.node.appdata?.Component ?? Explorer;
+
+                //If it's a folder (Explorer), override root.
+                const propsForThisWindow =
+                    win.node.appdata === null && AppComponent === Explorer
+                        ? { ...appProps, root: win.node } // per-window override
+                        : appProps;
+
                 return (
                     <Window
                         key={win.id}
@@ -46,7 +53,7 @@ export default function WindowManager({
                             );
                         }}
                     >
-                        <AppComponent {...appProps} />
+                        <AppComponent {...propsForThisWindow} />
                     </Window>
                 );
             })}
