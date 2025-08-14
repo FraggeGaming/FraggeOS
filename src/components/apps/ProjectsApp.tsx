@@ -1,4 +1,7 @@
-export default function ProjectsApp() {
+
+import type { AppWindowProps } from "./appProps";
+
+export default function ProjectsApp({ }: AppWindowProps) {
   return (
     <div>
       <h2>Projects App</h2>

@@ -24,6 +24,7 @@ type WindowEntry = {
 
 
 export default function App(): React.JSX.Element {
+  const folderIcon: string = "/icons/folder.png";
 
   const fs = useFilesystem(); // once!
   const { root, addFolder, addFile } = fs;
@@ -93,11 +94,11 @@ export default function App(): React.JSX.Element {
       >
 
         {findDesktopNode(root)?.children.map((app) => {
-
+          const icon = app.appdata ? app.appdata.icon : folderIcon;
           return (
             <ClickableIcon
               title={app.label}
-              icon={app.appdata?.icon ?? null}
+              icon={icon}
               onDoubleClick={() => openApp(app, app.label)}
             />
           );
@@ -106,11 +107,8 @@ export default function App(): React.JSX.Element {
 
         {/* Windows */}
         {windows.map((win) => {
-          const AppComponent = win.node.appdata?.Component;
-          if (!AppComponent) return null;
-
-          const extraProps =
-            AppComponent === Explorer || AppComponent === TerminalApp ? { openApp, root , addFolder, addFile} : {};
+          const AppComponent = win.node.appdata ? win.node.appdata.Component : Explorer;
+          const extraProps = { openApp, root , addFolder, addFile};
 
           return (
             <Window

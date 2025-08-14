@@ -1,4 +1,6 @@
-export default function ResumeApp() {
+import type { AppWindowProps } from "./appProps";
+
+export default function ResumeApp({ }: AppWindowProps) {
   return (
     <div>
       <h2>Resume App</h2>
