@@ -25,7 +25,7 @@ export default function WindowManager({
     return (
         <>
             {windows.map((win) => {
-                const AppComponent = win.node.appdata?.Component ?? Explorer;
+                const AppComponent = win.node.getComponent() ?? Explorer;
 
                 //If it's a folder (Explorer), override root.
                 const propsForThisWindow =

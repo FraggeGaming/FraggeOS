@@ -9,9 +9,6 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
     const backIcon = "/icons/back.png";
     const homeIcon = "/icons/home.png";
 
-    const current = openNode ?? root;
-    console.log(current.label)
-
     const handleOpen = (n: Node) => {
         if (n.appdata) {
             openApp(n, n.appdata.title);
@@ -20,12 +17,26 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
         }
     };
 
+    const fetchFounder = (n: Node): Node => {
+        let adam = n;
+        while (adam.parent) {
+            adam = adam.parent;
+        }
+        return adam;
+    }
+
+    const current = openNode ?? root;
+    const adam = fetchFounder(root);
+    console.log(current.label)
+
+
+
     return (
         <div className="p-3 text-sm text-zinc-100">
             {/* Toolbar */}
             <div className="mb-3 flex items-center gap-2">
                 <button
-                    onClick={() => setOpenNode(current.parent ?? null)}
+                    onClick={() => setOpenNode(current.parent ?? adam)}
                     className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
                     title="Back"
                 >
@@ -38,7 +49,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                 </button>
 
                 <button
-                    onClick={() => setOpenNode(null)}
+                    onClick={() => setOpenNode(adam)}
                     className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
                     title="Home"
                 >

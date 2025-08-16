@@ -5,10 +5,21 @@ import TerminalApp from "./apps/TerminalApp";
 import Explorer from "./apps/Explorer";
 
 
+const componentRegistry = {
+    resume: ResumeApp,
+    projects: ProjectsApp,
+    terminal: TerminalApp,
+    explorer: Explorer,
+} as const;
+
+type ComponentId = keyof typeof componentRegistry;
+
+
 export interface AppData {
     title: string;
     icon: string;
-    Component: React.ComponentType<any>;
+    key: ComponentId;
+
 }
 
 
@@ -39,7 +50,17 @@ export class Node {
     get isFile(): boolean {
         return this.appdata !== null;
     }
+
+    getComponent(): React.ComponentType<any> | null {
+        if (!this.appdata) return null;
+        // no optional chaining on the index; after the guard, it's defined
+        return componentRegistry[this.appdata.key];
+    }
+
+
+
 }
+
 
 function buildFilesystem(): Node {
     const r = new Node(null, "C");
@@ -49,19 +70,19 @@ function buildFilesystem(): Node {
     new Node(desktop, "Resume", {
         title: "Resume",
         icon: "/icons/document.png",
-        Component: ResumeApp,
+        key: "resume"
     });
 
     new Node(desktop, "Terminal", {
         title: "Terminal",
         icon: "/icons/terminal.png",
-        Component: TerminalApp,
+        key: "terminal"
     });
 
     new Node(desktop, "Explorer", {
         title: "Explorer",
         icon: "/icons/computer.png",
-        Component: Explorer,
+        key: "explorer"
     });
 
     new Node(desktop, "RandomStuff");
@@ -70,7 +91,7 @@ function buildFilesystem(): Node {
     new Node(projects, "Antzation", {
         title: "Antzation",
         icon: "/icons/document.png",
-        Component: ProjectsApp,
+        key: "projects"
     });
 
     const appData = new Node(r, "AppData");
