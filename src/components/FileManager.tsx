@@ -3,6 +3,7 @@ import ResumeApp from "./apps/ResumeApp";
 import ProjectsApp from "./apps/ProjectsApp";
 import TerminalApp from "./apps/TerminalApp";
 import Explorer from "./apps/Explorer";
+import type { AppWindowProps } from "./apps/appProps";
 
 
 const componentRegistry = {
@@ -51,7 +52,7 @@ export class Node {
         return this.appdata !== null;
     }
 
-    getComponent(): React.ComponentType<any> | null {
+    getComponent(): React.ComponentType<AppWindowProps> | null {
         if (!this.appdata) return null;
         // no optional chaining on the index; after the guard, it's defined
         return componentRegistry[this.appdata.key];
@@ -94,7 +95,7 @@ function buildFilesystem(): Node {
         key: "projects"
     });
 
-    const appData = new Node(r, "AppData");
+    new Node(r, "AppData");
     return r;
 }
 
