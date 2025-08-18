@@ -54,7 +54,6 @@ export class Node {
 
     getComponent(): React.ComponentType<AppWindowProps> | null {
         if (!this.appdata) return null;
-        // no optional chaining on the index; after the guard, it's defined
         return componentRegistry[this.appdata.key];
     }
 
@@ -69,7 +68,7 @@ function buildFilesystem(): Node {
     const desktop = new Node(r, "Desktop");
 
     new Node(desktop, "Resume", {
-        title: "Resume",
+        title: "Resume.pdf",
         icon: "/icons/document.png",
         key: "resume"
     });

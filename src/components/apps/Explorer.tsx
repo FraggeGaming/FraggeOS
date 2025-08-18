@@ -11,7 +11,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
     const handleOpen = (n: Node) => {
         if (n.appdata) {
-            openApp(n, n.appdata.title);
+            openApp(n);
         } else {
             setOpenNode(n);
         }
@@ -31,9 +31,15 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
 
 
+    const handleRightClick = (e) => {
+        e.preventDefault();
+        console.log("right click is triggered");
+
+    }
+
+
     return (
-        <div className="p-3 text-sm text-zinc-100">
-            {/* Toolbar */}
+        <div className="flex flex-col flex-1 min-h-0 p-3 text-sm text-zinc-100" >            {/* Toolbar */}
             <div className="mb-3 flex items-center gap-2">
                 <button
                     onClick={() => setOpenNode(current.parent ?? adam)}
@@ -74,7 +80,8 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
             </div>
 
             {/* Children */}
-            <div className="ml-5">
+
+            <div className="ml-5 flex-1 min-h-0" onContextMenu={handleRightClick}>
                 {current.children?.length ? (
                     <ul className="space-y-1">
                         {current.children.map((child) => (
@@ -90,7 +97,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                                         className="h-4 w-4 select-none"
                                         draggable={false}
                                     />
-                                    <span className="truncate">{child.label}</span>
+                                    <span className="truncate">{child.appdata ? child.appdata.title : child.label}</span>
                                 </button>
                             </li>
                         ))}

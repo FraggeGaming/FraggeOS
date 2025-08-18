@@ -30,13 +30,13 @@ export default function App(): React.JSX.Element {
   const { root, addFolder, addFile } = fs;
   const [windows, setWindows] = useState<WindowEntry[]>([]);
 
-  const openApp = (n: Node, title: string) => {
+  const openApp = (n: Node) => {
     setWindows((prev) => [
       ...prev,
       {
         id: crypto.randomUUID(),
         node: n,
-        title: title,
+        title: n.label,
         x: 100,
         y: 100,
         width: 600,
@@ -102,7 +102,7 @@ export default function App(): React.JSX.Element {
             <ClickableIcon
               title={app.label}
               icon={icon}
-              onDoubleClick={() => openApp(app, app.label)}
+              onDoubleClick={() => openApp(app)}
             />
           );
         })}

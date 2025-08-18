@@ -41,15 +41,15 @@ export default function Window({
         maximized
           ? false
           : {
-              top: false,
-              right: true,
-              bottom: true,
-              left: false,
-              topRight: true,
-              bottomRight: true,
-              bottomLeft: true,
-              topLeft: true,
-            }
+            top: false,
+            right: true,
+            bottom: true,
+            left: false,
+            topRight: true,
+            bottomRight: true,
+            bottomLeft: true,
+            topLeft: true,
+          }
       }
       size={maximized ? { width: "100%", height: "100%" } : { width, height }}
       position={maximized ? { x: 0, y: 0 } : { x, y }}
@@ -96,7 +96,10 @@ export default function Window({
 
         {/* Body must expand even when empty */}
         <div className="flex-1 min-h-0 p-4 overflow-auto">
-          {children ?? null}
+          <div className="flex flex-col h-full">
+            {children ?? null}
+          </div>
+
         </div>
       </div>
     </Rnd>
