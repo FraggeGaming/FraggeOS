@@ -95,7 +95,7 @@ export default function Window({
         </div>
 
         {/* Body must expand even when empty */}
-        <div className="flex-1 min-h-0 p-4 overflow-auto">
+        <div className="flex-1 min-h-0 overflow-auto">
           <div className="flex flex-col h-full">
             {children ?? null}
           </div>
