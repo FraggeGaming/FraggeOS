@@ -121,6 +121,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                     {getPath(openNode ?? adam)}
                 </div>
 
+                {/* make search functionable, by using find node and set opennode */}
                 <div className="bg-gray-700 flex flex-1 items-center justify-center rounded p-1">
                     <p className="flex items-center">Search</p>
                 </div>
