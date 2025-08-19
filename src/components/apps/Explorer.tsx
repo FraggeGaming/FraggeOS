@@ -86,44 +86,53 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
 
     return (
-        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-3 h-full min-h-0 p-3 text-sm text-zinc-100" >            {/* Toolbar */}
-            <div className="col-span-2 h-12 bg-blue-600 flex items-center gap-2 rounded">
-                <button
-                    onClick={() => setOpenNode(current.parent ?? adam)}
-                    className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
-                    title="Back"
-                >
-                    <img
-                        src={backIcon}
-                        alt="Back"
-                        className="h-4 w-4 filter brightness-0 invert"
-                        draggable={false}
-                    />
-                </button>
+        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-2 h-full min-h-0 text-sm text-zinc-100" >            {/* Toolbar */}
+            <div className="col-span-2 h-12 bg-gray-800 flex items-center gap-4 p-2">
 
-                <button
-                    onClick={() => setOpenNode(adam)}
-                    className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
-                    title="Home"
-                >
-                    <img
-                        src={homeIcon}
-                        alt="Home"
-                        className="h-4 w-4 filter brightness-0 invert"
-                        draggable={false}
-                    />
-                </button>
+                <div className="w-26 flex gap-5">
+                    <button
+                        onClick={() => setOpenNode(current.parent ?? adam)}
+                        className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+                        title="Back"
+                    >
+                        <img
+                            src={backIcon}
+                            alt="Back"
+                            className="h-4 w-4 filter brightness-0 invert"
+                            draggable={false}
+                        />
+                    </button>
 
-                {getPath(openNode ?? adam)}
+                    <button
+                        onClick={() => setOpenNode(adam)}
+                        className="inline-flex items-center justify-center rounded-md bg-white/5 px-2 py-1 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
+                        title="Home"
+                    >
+                        <img
+                            src={homeIcon}
+                            alt="Home"
+                            className="h-4 w-4 filter brightness-0 invert"
+                            draggable={false}
+                        />
+                    </button>
+                </div>
+
+                <div className="flex flex-1/2 bg-gray-700 p-1 rounded pl-2 pr-2">
+                    {getPath(openNode ?? adam)}
+                </div>
+
+                <div className="bg-gray-700 flex flex-1 items-center justify-center rounded p-1">
+                    <p className="flex items-center">Search</p>
+                </div>
+
+
             </div>
 
             {/* Children */}
 
-            <div className="flex flex-row gap-4">
-                <div className="bg-green-600 rounded h-full min-h-0 overflow-auto">
+            <div className="flex flex-row gap-2 col-span-2">
+                <div className="bg-gray-800 rounded h-full min-h-0 overflow-auto p-1 flex-1">
                     <ul className="space-y-1">
-
-
                         {fetchPinnedNodes().map((child) => (
                             <li key={child.id}>
                                 <button
@@ -147,23 +156,28 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
                 </div>
 
-                <div className="min-h-0 overflow-auto" onContextMenu={handleRightClick}>
+                <div
+                    className="min-h-0 overflow-auto bg-gray-800 flex-1/2"
+                    onContextMenu={handleRightClick}
+                >
                     {current.children?.length ? (
-                        <ul className="space-y-1">
+                        <ul className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-2">
                             {current.children.map((child) => (
                                 <li key={child.id}>
                                     <button
                                         onDoubleClick={() => handleOpen(child)}
-                                        className="group flex w-full items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/20"
+                                        className="flex flex-col items-center justify-center gap-2 rounded-md p-2 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
                                         title={child.label}
                                     >
                                         <img
                                             src={child.appdata?.icon ?? (child.isFile ? fileIcon : folderIcon)}
                                             alt=""
-                                            className="h-4 w-4 select-none"
+                                            className="h-16 w-16 select-none"
                                             draggable={false}
                                         />
-                                        <span className="truncate">{child.appdata ? child.appdata.title : child.label}</span>
+                                        <span className="truncate text-sm text-white text-center w-full">
+                                            {child.appdata ? child.appdata.title : child.label}
+                                        </span>
                                     </button>
                                 </li>
                             ))}
@@ -172,6 +186,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                         <em className="text-zinc-400">No children</em>
                     )}
                 </div>
+
             </div>
         </div>
     );
