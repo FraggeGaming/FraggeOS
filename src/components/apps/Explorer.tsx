@@ -27,7 +27,10 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
     const current = openNode ?? root;
     const adam = fetchFounder(root);
-    console.log(current.label)
+    console.log("current " + current.label);
+    console.log("Root " + root.label)
+    console.log("adam " + adam.label)
+    console.log("open " + openNode?.label)
 
 
     const findNode = (root: Node, label: string): Node | undefined => {
@@ -44,11 +47,11 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
     const fetchPinnedNodes = (): Node[] => {
         const pinned = ["Desktop", "Terminal", "Explorer"];
         return pinned
-            .map(p => findNode(root, p))            // Node | undefined
+            .map(p => findNode(adam, p))            // Node | undefined
             .filter((n): n is Node => n != null);   // remove undefined/null
     };
 
-    const handleRightClick = (e) => {
+    const handleRightClick = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         console.log("right click is triggered");
 
@@ -60,12 +63,15 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
         const labels: Node[] = [];
         let current: Node | null = n;
-
+        console.log("Starting search for path")
         while (current) {
             labels.push(current)
             current = current.parent;
+            console.log("path: " + current?.label)
+
         }
         labels.reverse();
+        console.log(labels)
 
         return (
             <div className="flex flex-row space-x-1">
@@ -118,7 +124,7 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                 </div>
 
                 <div className="flex flex-1/2 bg-gray-700 p-1 rounded pl-2 pr-2">
-                    {getPath(openNode ?? adam)}
+                    {getPath(openNode ?? root)}
                 </div>
 
                 {/* make search functionable, by using find node and set opennode */}

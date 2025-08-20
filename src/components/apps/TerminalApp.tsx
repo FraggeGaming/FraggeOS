@@ -96,7 +96,7 @@ export default function TerminalApp({ openApp, root, addFolder, addFile }: AppWi
           const target = currentNode.children?.find(c => c.label === args[0]);
 
           if (target) {
-            openApp(target, target.label);
+            openApp(target);
           } else {
             print(`Application "${args[0]}" not found.`);
           }
