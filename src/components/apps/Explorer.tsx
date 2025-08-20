@@ -90,9 +90,9 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
 
 
-
+ {/* Toolbar */}
     return (
-        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-2 h-full min-h-0 text-sm text-zinc-100" >            {/* Toolbar */}
+        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-2 h-full min-h-0 text-sm text-zinc-100" >           
             <div className="col-span-2 h-12 bg-gray-800 flex items-center gap-4 p-2">
 
                 <div className="w-26 flex gap-5">
