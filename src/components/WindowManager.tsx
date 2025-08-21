@@ -25,13 +25,14 @@ export default function WindowManager({
     return (
         <>
             {windows.map((win) => {
+
+                let propsForThisWindow = appProps;
+                if (!win.node.getComponent() || win.node.getComponent() !== Explorer) {
+                    propsForThisWindow = { ...appProps, root: win.node };
+                }
+
                 const AppComponent = win.node.getComponent() ?? Explorer;
 
-                //If it's a folder (Explorer), override root.
-                const propsForThisWindow =
-                    !win.node.getComponent()
-                        ? { ...appProps, root: win.node } // per-window override
-                        : appProps;
 
                 console.log(propsForThisWindow)
 

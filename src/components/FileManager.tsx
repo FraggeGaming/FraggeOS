@@ -4,13 +4,17 @@ import ProjectsApp from "./apps/ProjectsApp";
 import TerminalApp from "./apps/TerminalApp";
 import Explorer from "./apps/Explorer";
 import type { AppWindowProps } from "./apps/appProps";
-
+import TextFile from "./apps/TextFile";
+import content from "../assets/content.json";
+import ImageViewer from "./apps/imageViewer";
 
 const componentRegistry = {
     resume: ResumeApp,
     projects: ProjectsApp,
     terminal: TerminalApp,
     explorer: Explorer,
+    textFile: TextFile,
+    imageViewer: ImageViewer
 } as const;
 
 type ComponentId = keyof typeof componentRegistry;
@@ -19,6 +23,7 @@ type ComponentId = keyof typeof componentRegistry;
 export interface AppData {
     title: string;
     icon: string;
+    bread: string | null;
     key: ComponentId;
 
 }
@@ -67,31 +72,47 @@ function buildFilesystem(): Node {
 
     const desktop = new Node(r, "Desktop");
 
+    new Node(desktop, "Photos", {
+        title: "Photos",
+        icon: "/icons/gallery.png",
+        key: "imageViewer",
+        bread: null
+    })
+
     new Node(desktop, "Resume", {
         title: "Resume.pdf",
         icon: "/icons/document.png",
-        key: "resume"
+        key: "resume",
+        bread: null
     });
 
     new Node(desktop, "Terminal", {
         title: "Terminal",
         icon: "/icons/terminal.png",
-        key: "terminal"
+        key: "terminal",
+        bread: null
     });
 
     new Node(desktop, "Explorer", {
         title: "Explorer",
         icon: "/icons/computer.png",
-        key: "explorer"
+        key: "explorer",
+        bread: null
     });
 
-    new Node(desktop, "RandomStuff");
+    const rs = new Node(desktop, "RandomStuff");
+    const fp = "FraggPad+-"
+    new Node(rs, fp, {
+        ...content[fp],
+        key: content[fp].key as ComponentId,
+    });
 
     const projects = new Node(r, "Projects");
     new Node(projects, "Antzation", {
         title: "Antzation",
         icon: "/icons/document.png",
-        key: "projects"
+        key: "projects",
+        bread: null
     });
 
     new Node(r, "AppData");
