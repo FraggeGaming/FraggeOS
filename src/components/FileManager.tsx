@@ -6,7 +6,7 @@ import Explorer from "./apps/Explorer";
 import type { AppWindowProps } from "./apps/appProps";
 import TextFile from "./apps/TextFile";
 import content from "../assets/content.json";
-import ImageViewer from "./apps/imageViewer";
+import ImageViewer from "./apps/ImageViewer";
 
 const componentRegistry = {
     resume: ResumeApp,
