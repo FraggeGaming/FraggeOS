@@ -23,10 +23,11 @@ type ComponentId = keyof typeof componentRegistry;
 export interface AppData {
     title: string;
     icon: string;
-    bread: string | null;
     key: ComponentId;
 
 }
+
+export const textFileData = new Map<string, string>();
 
 
 export class Node {
@@ -35,7 +36,7 @@ export class Node {
     public label = "";
     public id: string = crypto.randomUUID();
 
-    // If this node is a file/app, app is defined:
+    //If this node is a file/app, app is defined:
     public appdata: AppData | null = null;
 
     constructor(parent: Node | null, label: string, appdata: AppData | null = null) {
@@ -61,9 +62,6 @@ export class Node {
         if (!this.appdata) return null;
         return componentRegistry[this.appdata.key];
     }
-
-
-
 }
 
 
@@ -76,43 +74,41 @@ function buildFilesystem(): Node {
         title: "Photos",
         icon: "/icons/gallery.png",
         key: "imageViewer",
-        bread: null
     })
 
     new Node(desktop, "Resume", {
         title: "Resume.pdf",
         icon: "/icons/document.png",
         key: "resume",
-        bread: null
     });
 
     new Node(desktop, "Terminal", {
         title: "Terminal",
         icon: "/icons/terminal.png",
         key: "terminal",
-        bread: null
     });
 
     new Node(desktop, "Explorer", {
         title: "Explorer",
         icon: "/icons/computer.png",
         key: "explorer",
-        bread: null
     });
 
     const rs = new Node(desktop, "RandomStuff");
-    const fp = "FraggPad+-"
-    new Node(rs, fp, {
-        ...content[fp],
-        key: content[fp].key as ComponentId,
+    const tirl = new Node(rs, "FraggPad+-", {
+        "title": "This Is Rocket Leauge!",
+        "icon": "/icons/document.png",
+        "key": "textFile",
     });
+
+    textFileData.set(tirl.id, content?.["FraggPad+-"]?.bread);
+
 
     const projects = new Node(r, "Projects");
     new Node(projects, "Antzation", {
         title: "Antzation",
         icon: "/icons/document.png",
         key: "projects",
-        bread: null
     });
 
     new Node(r, "AppData");

@@ -1,10 +1,10 @@
 import React from "react";
 import type { AppWindowProps } from "./appProps";
-
+import { textFileData } from "../FileManager";
 export default function TextFile({ root }: AppWindowProps) {
     const title = root.appdata?.title ?? "Untitled.txt";
     const content =
-        root.appdata?.bread ??
+        textFileData.get(root.id) ??
         "This document is empty. Type something inspiring…";
 
     return (
