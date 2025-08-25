@@ -7,6 +7,7 @@ import type { AppWindowProps } from "./apps/appProps";
 import TextFile from "./apps/TextFile";
 import content from "../assets/content.json";
 import ImageViewer from "./apps/ImageViewer";
+import Game from "./apps/Game";
 
 const componentRegistry = {
     resume: ResumeApp,
@@ -14,7 +15,8 @@ const componentRegistry = {
     terminal: TerminalApp,
     explorer: Explorer,
     textFile: TextFile,
-    imageViewer: ImageViewer
+    imageViewer: ImageViewer,
+    game: Game
 } as const;
 
 type ComponentId = keyof typeof componentRegistry;
@@ -101,6 +103,7 @@ function buildFilesystem(): Node {
         "key": "textFile",
     });
 
+ 
     textFileData.set(tirl.id, content?.["FraggPad+-"]?.bread);
 
 
@@ -108,7 +111,7 @@ function buildFilesystem(): Node {
     new Node(projects, "Antzation", {
         title: "Antzation",
         icon: "/icons/document.png",
-        key: "projects",
+        key: "game",
     });
 
     new Node(r, "AppData");
