@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "levenshtein-edit-distance": "^3.0.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-rnd": "^10.5.2",

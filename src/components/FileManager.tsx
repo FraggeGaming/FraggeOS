@@ -9,6 +9,8 @@ import content from "../assets/content.json";
 import ImageViewer from "./apps/ImageViewer";
 import Game from "./apps/Game";
 
+import { levenshteinEditDistance } from 'levenshtein-edit-distance'
+
 const componentRegistry = {
     resume: ResumeApp,
     projects: ProjectsApp,
@@ -103,7 +105,7 @@ function buildFilesystem(): Node {
         "key": "textFile",
     });
 
- 
+
     textFileData.set(tirl.id, content?.["FraggPad+-"]?.bread);
 
 
@@ -117,6 +119,32 @@ function buildFilesystem(): Node {
     new Node(r, "AppData");
     return r;
 }
+export function SearchFs(text: string, root: Node): Node[] {
+    const results: { node: Node; dist: number }[] = [];
+    const queue = [root];
+
+    while (queue.length > 0) {
+        const node = queue.shift();
+        if (!node) continue;
+
+        const dist = levenshteinEditDistance(text, node.label);
+        results.push({ node, dist });
+
+        for (const child of node.children) {
+            queue.push(child);
+        }
+    }
+
+    //sort by distance
+    results.sort((a, b) => a.dist - b.dist);
+
+
+    return results
+        .sort((a, b) => a.dist - b.dist)
+        .slice(0, 10)
+        .map(r => r.node);
+}
+
 
 export function useFilesystem() {
     const rootRef = React.useRef<Node>(buildFilesystem());
