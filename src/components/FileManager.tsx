@@ -127,6 +127,7 @@ export function SearchFs(text: string, root: Node): Node[] {
         const node = queue.shift();
         if (!node) continue;
 
+
         const dist = levenshteinEditDistance(text, node.label);
         results.push({ node, dist });
 
@@ -136,10 +137,11 @@ export function SearchFs(text: string, root: Node): Node[] {
     }
 
     //sort by distance
-    results.sort((a, b) => a.dist - b.dist);
 
+    console.table(results.slice(0, 10).sort((a, b) => a.dist - b.dist).map(r => ({ label: r.node.label, dist: r.dist })));
 
     return results
+        .filter(r => r.node.appdata)
         .sort((a, b) => a.dist - b.dist)
         .slice(0, 10)
         .map(r => r.node);

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import type { AppWindowProps } from "./appProps";
-import type { Node } from "../FileManager";
+import { SearchFs, type Node } from "../FileManager";
 
 export default function Explorer({ openApp, root }: AppWindowProps) {
     const [openNode, setOpenNode] = useState<Node | null>(null);
+    const [searchResult, setSearchResult] = useState<Node[]>([]);
+    const [searchValue, setSearchValue] = useState<string>("");
     const folderIcon = "/icons/folder.png";
     const fileIcon = "/icons/file.png";
     const backIcon = "/icons/back.png";
@@ -63,15 +65,15 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
         const labels: Node[] = [];
         let current: Node | null = n;
-        console.log("Starting search for path")
+        //console.log("Starting search for path")
         while (current) {
             labels.push(current)
             current = current.parent;
-            console.log("path: " + current?.label)
+            //console.log("path: " + current?.label)
 
         }
         labels.reverse();
-        console.log(labels)
+        //console.log(labels)
 
         return (
             <div className="flex flex-row space-x-1">
@@ -88,11 +90,35 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
         )
     }
 
+    const handleSearch = (e) => {
+        const t = e.target.value;
+        setSearchValue(t);
+        if (t.length === 0) return
+        console.log("This is the value in the serach: " + t)
+
+        const q = t.trim();
+        if (q.length === 0) {
+            setSearchResult([]); // clear results when empty
+            return;
+        }
+
+        const result = SearchFs(t, openNode ?? adam);
+        setSearchResult(result);
+
+        console.log("search: " + result.at(0)?.label);
+    }
 
 
- {/* Toolbar */}
+    const visibleNodes =
+        searchValue.trim() !== "" && searchResult.length > 0
+            ? searchResult
+            : current.children;
+
+
+
+    {/* Toolbar */ }
     return (
-        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-2 h-full min-h-0 text-sm text-zinc-100" >           
+        <div className="grid grid-rows-[auto_1fr] grid-cols-[16rem_1fr] gap-2 h-full min-h-0 text-sm text-zinc-100" >
             <div className="col-span-2 h-12 bg-gray-800 flex items-center gap-4 p-2">
 
                 <div className="w-26 flex gap-5">
@@ -127,9 +153,11 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                     {getPath(openNode ?? root)}
                 </div>
 
-                {/* make search functionable, by using find node and set opennode */}
                 <div className="bg-gray-700 flex flex-1 items-center justify-center rounded p-1">
-                    <p className="flex items-center">Search</p>
+                    <div className="flex items-center">
+                        <input type="text" placeholder="Search" onChange={handleSearch} value={searchValue} />
+                    </div>
+
                 </div>
 
 
@@ -163,13 +191,11 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
                 </div>
 
-                <div
-                    className="min-h-0 overflow-auto bg-gray-800 flex-1/2"
-                    onContextMenu={handleRightClick}
-                >
-                    {current.children?.length ? (
+
+                <div className="min-h-0 overflow-auto bg-gray-800 flex-1/2" onContextMenu={handleRightClick}>
+                    {visibleNodes.length > 0 ? (
                         <ul className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-2">
-                            {current.children.map((child) => (
+                            {visibleNodes.map(child => (
                                 <li key={child.id}>
                                     <button
                                         onDoubleClick={() => handleOpen(child)}
@@ -190,9 +216,12 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                             ))}
                         </ul>
                     ) : (
-                        <em className="text-zinc-400">No children</em>
+                        <em className="text-zinc-400">
+                            {searchValue.trim() !== "" ? "No results" : "No children"}
+                        </em>
                     )}
                 </div>
+
 
             </div>
         </div>
