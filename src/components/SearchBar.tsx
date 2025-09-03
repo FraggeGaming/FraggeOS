@@ -17,8 +17,9 @@ export function SearchBar({
     const handleSearch = (e: { target: { value: any; }; }) => {
         const t = e.target.value;
         setSearchValue(t);
-        if (t.length === 0) return
         console.log("This is the value in the serach: " + t)
+        if (t.length === 0) return
+        
 
         const q = t.trim();
         if (q.length === 0) {

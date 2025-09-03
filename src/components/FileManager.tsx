@@ -160,13 +160,36 @@ export const findNode = (root: Node, label: string): Node | null => {
 };
 
 export const findNodes = (root: Node, labels: string[]): Node[] => {
-   return labels
-            .map(p => findNode(root, p))            // Node | undefined
-            .filter((n): n is Node => n != null);   // remove undefined/null
+    return labels
+        .map(p => findNode(root, p))            // Node | undefined
+        .filter((n): n is Node => n != null);   // remove undefined/null
 };
 
+export const fetchFounderNode = (n: Node): Node => {
+        let adam = n;
+        while (adam.parent) {
+            adam = adam.parent;
+        }
+        return adam;
+    }
 
 
+
+export const getPath = (n: Node): Node[] => {
+
+    const labels: Node[] = [];
+    let current: Node | null = n;
+    //console.log("Starting search for path")
+    while (current) {
+        labels.push(current)
+        current = current.parent;
+        //console.log("path: " + current?.label)
+
+    }
+    labels.reverse();
+
+    return labels;
+}
 
 
 export function useFilesystem() {
