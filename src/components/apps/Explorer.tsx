@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { AppWindowProps } from "./appProps";
-import { SearchFs, type Node } from "../FileManager";
+import { SearchFs, Node, findNodes } from "../FileManager";
+import { AppIcon, AppIconSmall } from "../DesktopIcon";
+import { SearchBar } from "../SearchBar";
 
 export default function Explorer({ openApp, root }: AppWindowProps) {
     const [openNode, setOpenNode] = useState<Node | null>(null);
@@ -35,22 +37,9 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
     console.log("open " + openNode?.label)
 
 
-    const findNode = (root: Node, label: string): Node | undefined => {
-        if (root.label === label) return root;
-        if (!root.children) return undefined;
-
-        for (const child of root.children) {
-            const found = findNode(child, label);
-            if (found) return found;
-        }
-        return undefined;
-    };
-
     const fetchPinnedNodes = (): Node[] => {
         const pinned = ["Desktop", "Terminal", "Explorer"];
-        return pinned
-            .map(p => findNode(adam, p))            // Node | undefined
-            .filter((n): n is Node => n != null);   // remove undefined/null
+        return findNodes(adam, pinned);
     };
 
     const handleRightClick = (e: { preventDefault: () => void; }) => {
@@ -89,25 +78,6 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
             </div>
         )
     }
-
-    const handleSearch = (e) => {
-        const t = e.target.value;
-        setSearchValue(t);
-        if (t.length === 0) return
-        console.log("This is the value in the serach: " + t)
-
-        const q = t.trim();
-        if (q.length === 0) {
-            setSearchResult([]); // clear results when empty
-            return;
-        }
-
-        const result = SearchFs(t, openNode ?? adam);
-        setSearchResult(result);
-
-        console.log("search: " + result.at(0)?.label);
-    }
-
 
     const visibleNodes =
         searchValue.trim() !== "" && searchResult.length > 0
@@ -153,12 +123,12 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
                     {getPath(openNode ?? root)}
                 </div>
 
-                <div className="bg-gray-700 flex flex-1 items-center justify-center rounded p-1">
-                    <div className="flex items-center">
-                        <input type="text" placeholder="Search" onChange={handleSearch} value={searchValue} />
-                    </div>
-
-                </div>
+                <SearchBar
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    setSearchResult={setSearchResult}
+                    node={openNode ?? adam}
+                />
 
 
             </div>
@@ -167,63 +137,44 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
             <div className="flex flex-row gap-2 col-span-2">
                 <div className="bg-gray-800 rounded h-full min-h-0 overflow-auto p-1 flex-1">
-                    <ul className="space-y-1">
-                        {fetchPinnedNodes().map((child) => (
-                            <li key={child.id}>
-                                <button
-                                    onDoubleClick={() => handleOpen(child)}
-                                    className="group flex w-full items-center gap-2 rounded-md px-2 py-1 text-left hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/20"
-                                    title={child.label}
-                                >
-                                    <img
-                                        src={child.appdata?.icon ?? (child.isFile ? fileIcon : folderIcon)}
-                                        alt=""
-                                        className="h-4 w-4 select-none"
-                                        draggable={false}
-                                    />
-                                    <span className="truncate">{child.appdata ? child.appdata.title : child.label}</span>
-                                </button>
-                            </li>
-                        ))}
-
-                    </ul>
-
-
+                    {NodeList(fetchPinnedNodes(), handleOpen)}
                 </div>
-
-
                 <div className="min-h-0 overflow-auto bg-gray-800 flex-1/2" onContextMenu={handleRightClick}>
-                    {visibleNodes.length > 0 ? (
-                        <ul className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-2">
-                            {visibleNodes.map(child => (
-                                <li key={child.id}>
-                                    <button
-                                        onDoubleClick={() => handleOpen(child)}
-                                        className="flex flex-col items-center justify-center gap-2 rounded-md p-2 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20"
-                                        title={child.label}
-                                    >
-                                        <img
-                                            src={child.appdata?.icon ?? (child.isFile ? fileIcon : folderIcon)}
-                                            alt=""
-                                            className="h-16 w-16 select-none"
-                                            draggable={false}
-                                        />
-                                        <span className="truncate text-sm text-white text-center w-full">
-                                            {child.appdata ? child.appdata.title : child.label}
-                                        </span>
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <em className="text-zinc-400">
-                            {searchValue.trim() !== "" ? "No results" : "No children"}
-                        </em>
-                    )}
+                    {NodeGrid(visibleNodes, handleOpen)}
                 </div>
-
-
             </div>
-        </div>
+        </div >
+    );
+}
+
+function NodeGrid(nodes: Node[], handleOpen: (n: Node) => void) {
+
+    return (
+        <ul className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-2">
+            {nodes.map((node) => (
+                <li key={node.id}>
+                    <AppIcon
+                        node={node}
+                        onDoubleClick={() => handleOpen(node)}
+                    />
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+function NodeList(nodes: Node[], handleOpen: (n: Node) => void) {
+    return (
+        <ul className="space-y-1">
+            {nodes.map((child) => (
+                <li key={child.id}>
+                    <AppIconSmall
+                        node={child}
+                        onDoubleClick={() => handleOpen(child)}
+                    />
+                </li>
+            ))}
+
+        </ul>
     );
 }

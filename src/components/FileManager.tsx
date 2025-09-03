@@ -148,6 +148,27 @@ export function SearchFs(text: string, root: Node): Node[] {
 }
 
 
+export const findNode = (root: Node, label: string): Node | undefined => {
+    if (root.label === label) return root;
+    if (!root.children) return undefined;
+
+    for (const child of root.children) {
+        const found = findNode(child, label);
+        if (found) return found;
+    }
+    return undefined;
+};
+
+export const findNodes = (root: Node, labels: string[]): Node[] => {
+   return labels
+            .map(p => findNode(root, p))            // Node | undefined
+            .filter((n): n is Node => n != null);   // remove undefined/null
+};
+
+
+
+
+
 export function useFilesystem() {
     const rootRef = React.useRef<Node>(buildFilesystem());
     const [, setTick] = React.useState(0);

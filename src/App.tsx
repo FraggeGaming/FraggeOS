@@ -5,9 +5,9 @@ import "./index.css";
 import WindowManager from './components/WindowManager';
 import Taskbar from "./components/Taskbar";
 
-import { ClickableIcon } from './components/DesktopIcon';
+import { AppIcon } from './components/DesktopIcon';
 
-import { Node, useFilesystem } from "./components/FileManager"
+import { Node, useFilesystem, findNode } from "./components/FileManager"
 
 
 export type WindowEntry = {
@@ -24,7 +24,6 @@ export type WindowEntry = {
 
 
 export default function App(): React.JSX.Element {
-  const folderIcon: string = "/icons/folder.png";
 
   const fs = useFilesystem(); // once!
   const { root, addFolder, addFile } = fs;
@@ -66,23 +65,13 @@ export default function App(): React.JSX.Element {
     );
   };
 
-  const findDesktopNode = (root: Node): Node | undefined => {
-    if (root.label === "Desktop") return root;
-    if (!root.children) return undefined;
-
-    for (const child of root.children) {
-      const found = findDesktopNode(child);
-      if (found) return found;
-    }
-    return undefined;
-  };
-
-
   const closeWindow = (id: string) => {
     setWindows((prev) => prev.filter((win) => win.id !== id));
   };
 
   const appProps = { openApp, root, addFolder, addFile, };
+
+  const desktopNode = findNode(root, "Desktop");
 
 
   return (
@@ -96,12 +85,10 @@ export default function App(): React.JSX.Element {
         style={{ backgroundImage: "url('/desktopIcon.jpg')" }}
       >
 
-        {findDesktopNode(root)?.children.map((app) => {
-          const icon = app.appdata ? app.appdata.icon : folderIcon;
+        {desktopNode?.children.map((app) => {
           return (
-            <ClickableIcon
-              title={app.label}
-              icon={icon}
+            <AppIcon
+              node={app}
               onDoubleClick={() => openApp(app)}
             />
           );
