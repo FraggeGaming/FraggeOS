@@ -8,6 +8,7 @@ import Taskbar from "./components/Taskbar";
 import { AppIcon } from './components/DesktopIcon';
 
 import { Node, useFilesystem, findNode } from "./components/FileManager"
+import { DisplayNodeIcons } from './components/NodeIconDisplay';
 
 
 export type WindowEntry = {
@@ -73,7 +74,6 @@ export default function App(): React.JSX.Element {
 
   const desktopNode = findNode(root, "Desktop");
 
-
   return (
     <div className="App">
       <header className="App-header">
@@ -85,14 +85,13 @@ export default function App(): React.JSX.Element {
         style={{ backgroundImage: "url('/desktopIcon.jpg')" }}
       >
 
-        {desktopNode?.children.map((app) => {
-          return (
-            <AppIcon
-              node={app}
-              onDoubleClick={() => openApp(app)}
-            />
-          );
-        })}
+        <DisplayNodeIcons
+          nodes={desktopNode?.children}
+          onClick={openApp}
+          Item={AppIcon}
+          layout="list"
+        />
+        
 
         <WindowManager
           windows={windows}

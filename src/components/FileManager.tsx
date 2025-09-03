@@ -148,15 +148,15 @@ export function SearchFs(text: string, root: Node): Node[] {
 }
 
 
-export const findNode = (root: Node, label: string): Node | undefined => {
+export const findNode = (root: Node, label: string): Node | null => {
     if (root.label === label) return root;
-    if (!root.children) return undefined;
+    if (!root.children) return null;
 
     for (const child of root.children) {
         const found = findNode(child, label);
         if (found) return found;
     }
-    return undefined;
+    return null;
 };
 
 export const findNodes = (root: Node, labels: string[]): Node[] => {

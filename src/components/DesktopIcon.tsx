@@ -1,6 +1,6 @@
 import { Node } from "./FileManager";
 
-interface DesktopIconProps {
+export interface DesktopIconProps {
   node: Node;
   onDoubleClick?: React.MouseEventHandler<HTMLButtonElement>;
 }

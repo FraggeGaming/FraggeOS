@@ -1,15 +1,16 @@
 import { useState } from "react";
 import type { AppWindowProps } from "./appProps";
-import { SearchFs, Node, findNodes } from "../FileManager";
-import { AppIcon, AppIconSmall } from "../DesktopIcon";
+import { Node, findNodes } from "../FileManager";
+import { AppIcon, AppIconSmall} from "../DesktopIcon";
 import { SearchBar } from "../SearchBar";
+import { DisplayNodeIcons } from "../NodeIconDisplay";
+
 
 export default function Explorer({ openApp, root }: AppWindowProps) {
     const [openNode, setOpenNode] = useState<Node | null>(null);
     const [searchResult, setSearchResult] = useState<Node[]>([]);
     const [searchValue, setSearchValue] = useState<string>("");
-    const folderIcon = "/icons/folder.png";
-    const fileIcon = "/icons/file.png";
+
     const backIcon = "/icons/back.png";
     const homeIcon = "/icons/home.png";
 
@@ -29,12 +30,9 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
         return adam;
     }
 
-    const current = openNode ?? root;
+    
     const adam = fetchFounder(root);
-    console.log("current " + current.label);
-    console.log("Root " + root.label)
-    console.log("adam " + adam.label)
-    console.log("open " + openNode?.label)
+    const current = openNode ??  adam;
 
 
     const fetchPinnedNodes = (): Node[] => {
@@ -47,8 +45,6 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
         console.log("right click is triggered");
 
     }
-
-
 
     const getPath = (n: Node) => {
 
@@ -137,44 +133,24 @@ export default function Explorer({ openApp, root }: AppWindowProps) {
 
             <div className="flex flex-row gap-2 col-span-2">
                 <div className="bg-gray-800 rounded h-full min-h-0 overflow-auto p-1 flex-1">
-                    {NodeList(fetchPinnedNodes(), handleOpen)}
+                    <DisplayNodeIcons
+                        nodes={fetchPinnedNodes()}
+                        onClick={handleOpen}
+                        Item={AppIconSmall}
+                        layout="list"
+                    />
                 </div>
                 <div className="min-h-0 overflow-auto bg-gray-800 flex-1/2" onContextMenu={handleRightClick}>
-                    {NodeGrid(visibleNodes, handleOpen)}
+
+                    <DisplayNodeIcons
+                        nodes={visibleNodes}
+                        onClick={handleOpen}
+                        Item={AppIcon}
+                        layout="grid"
+                    />
+
                 </div>
             </div>
         </div >
-    );
-}
-
-function NodeGrid(nodes: Node[], handleOpen: (n: Node) => void) {
-
-    return (
-        <ul className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-4 p-2">
-            {nodes.map((node) => (
-                <li key={node.id}>
-                    <AppIcon
-                        node={node}
-                        onDoubleClick={() => handleOpen(node)}
-                    />
-                </li>
-            ))}
-        </ul>
-    );
-}
-
-function NodeList(nodes: Node[], handleOpen: (n: Node) => void) {
-    return (
-        <ul className="space-y-1">
-            {nodes.map((child) => (
-                <li key={child.id}>
-                    <AppIconSmall
-                        node={child}
-                        onDoubleClick={() => handleOpen(child)}
-                    />
-                </li>
-            ))}
-
-        </ul>
     );
 }
